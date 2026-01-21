@@ -1,40 +1,34 @@
 import { useEffect, useState } from "react";
 import api from "../../api/axios";
 import { Link } from "react-router-dom";
+import "./user.css";
 
 export default function TopicList() {
   const [topics, setTopics] = useState([]);
 
   useEffect(() => {
-    api.get("/topics").then((res) => setTopics(res.data));
+    api.get("/topics").then(res => setTopics(res.data));
   }, []);
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Danh sách chủ đề</h1>
+    <>
+      <h1 className="topic-title">Topics</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {topics.map((t) => (
-          <div
-            key={t.id}
-            className="bg-white shadow rounded-xl p-5 hover:shadow-lg transition"
-          >
-            <h2 className="text-lg font-semibold">{t.name}</h2>
-            <p className="text-sm text-gray-500 mt-1">{t.description}</p>
+      <div className="topic-grid">
+        {topics.map(t => (
+          <div key={t.id} className="topic-card">
+            <h3>{t.name}</h3>
+            <p className="topic-desc">{t.description}</p>
 
-            <div className="mt-4 flex justify-between items-center">
-              <span className="text-sm">🎯 {t.difficulty}</span>
-
-              <Link
-                to={`/topic/${t.id}`}
-                className="bg-blue-600 text-white px-4 py-2 rounded"
-              >
-                Làm bài
+            <div className="topic-footer">
+              <span className="topic-level">{t.difficulty}</span>
+              <Link to={`/topic/${t.id}`}>
+                <button className="btn-start">Start</button>
               </Link>
             </div>
           </div>
         ))}
       </div>
-    </div>
+    </>
   );
 }

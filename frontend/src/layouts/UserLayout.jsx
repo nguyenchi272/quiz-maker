@@ -1,25 +1,24 @@
 import { Outlet, Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import "../pages/user/user.css";
 
 export default function UserLayout() {
   const { user, logout } = useAuth();
 
   return (
-    <div>
-      <header className="bg-white shadow px-6 py-3 flex justify-between">
-        <Link to="/" className="font-bold">Quiz System</Link>
+    <>
+      <header className="user-header">
+        <Link to="/topics" className="logo">Quiz System</Link>
 
-        <div className="flex gap-4 items-center">
+        <div className="user-info">
           <span>{user.email}</span>
-          <button onClick={logout} className="text-red-500">
-            Logout
-          </button>
+          <button onClick={logout} className="action-delete">Logout</button>
         </div>
       </header>
 
-      <main className="p-6">
+      <main className="user-main">
         <Outlet />
       </main>
-    </div>
+    </>
   );
 }
