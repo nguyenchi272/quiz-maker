@@ -1,30 +1,50 @@
+import { useEffect, useState } from "react";
+import { getAdminQuizHistory } from "../../api/quizzes.api";
 import "./admin.css";
 
 export default function AdminDashboard() {
+  const [history, setHistory] = useState([]);
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  const load = async () => {
+    const res = await getAdminQuizHistory();
+    setHistory(res.data);
+  };
+
   return (
     <>
-      <h1 className="admin-title">Dashboard</h1>
+      <h1>Quiz History</h1>
 
-      <div className="stat-grid">
-        <div className="stat-card">
-          <span>Topics</span>
-          <h3>—</h3>
-        </div>
-
-        <div className="stat-card">
-          <span>Questions</span>
-          <h3>—</h3>
-        </div>
-
-        <div className="stat-card">
-          <span>Users</span>
-          <h3>—</h3>
-        </div>
-      </div>
-
-      <div className="welcome-box">
-        <h2>Welcome 👋</h2>
-        <p>Đây là khu vực quản trị hệ thống ngân hàng câu hỏi.</p>
+      <div className="table-box">
+        <table>
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Topic</th>
+              <th>Score</th>
+              <th>Submitted At</th>
+            </tr>
+          </thead>
+          <tbody>
+            {history.map((h) => (
+              <tr key={h.attempt_id}>
+                <td>{h.user_email}</td>
+                <td>{h.topic_name}</td>
+                <td>
+                  {h.score} / {h.max_score}
+                </td>
+                <td>
+                  {new Date(h.created_at + "Z").toLocaleString("vi-VN", {
+                    timeZone: "Asia/Ho_Chi_Minh",
+                  })}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </>
   );

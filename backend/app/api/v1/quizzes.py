@@ -6,6 +6,7 @@ from app.core.database import SessionLocal
 from app.models.question import Question
 from app.models.quiz_attempt import QuizAttempt
 from app.models.quiz_answer import QuizAnswer
+from app.models.topic import Topic
 
 from app.schemas.quiz import (
     QuizStartResponse,
@@ -179,5 +180,27 @@ def admin_history(
     db: Session = Depends(get_db),
     admin: User = Depends(require_admin)
 ):
-    return db.query(QuizAttempt).all()
+    rows = (
+        db.query(
+            QuizAttempt,
+            User.email,
+            Topic.name.label("topic_name")
+        )
+        .join(User, User.id == QuizAttempt.user_id)
+        .join(Topic, Topic.id == QuizAttempt.topic_id)
+        .order_by(QuizAttempt.created_at.desc())
+        .all()
+    )
+
+    return [
+        {
+            "attempt_id": attempt.id,
+            "user_email": email,
+            "topic_name": topic_name,
+            "score": attempt.total_score,
+            "max_score": attempt.max_score,
+            "created_at": attempt.created_at,
+        }
+        for attempt, email, topic_name in rows
+    ]
 

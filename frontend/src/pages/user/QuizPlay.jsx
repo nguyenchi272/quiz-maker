@@ -78,13 +78,47 @@ export default function QuizPlay() {
   /* =======================
           SUBMIT
   ======================= */
-  const submitQuiz = () => {
-    navigate("/result", {
-      state: {
-        questions,
-        answers,
-      },
-    });
+  const submitQuiz = async () => {
+    try {
+      const normalizedResponses = {};
+
+      questions.forEach((q) => {
+        const userAns = answers[q.id];
+        if (!userAns) return;
+
+        // ✅ MULTIPLE / CHECKBOX → đã là label
+        if (q.type !== "ranking") {
+          normalizedResponses[q.id] = userAns;
+          return;
+        }
+
+        // ✅ RANKING → convert answer.id → label
+        normalizedResponses[q.id] = userAns.map((aid) => {
+          const ans = q.answers.find((a) => a.id === aid);
+          return ans?.label;
+        });
+      });
+
+      const payload = {
+        topic_id: topicId,
+        responses: normalizedResponses
+      };
+
+      console.log("FINAL PAYLOAD", payload);
+
+      const res = await api.post("/quizzes/submit", payload);
+
+      navigate("/result", {
+        state: {
+          questions,
+          answers,
+          result: res.data
+        }
+      });
+    } catch (err) {
+      console.error(err.response?.data || err);
+      alert("Submit quiz failed");
+    }
   };
 
   return (

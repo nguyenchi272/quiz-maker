@@ -340,3 +340,12 @@ tr:not(:last-child) td {
   margin-top: 16px;
 }
 
+table td {
+  vertical-align: middle;
+}
+
+table td:nth-child(3) {
+  font-weight: 600;
+}
+
+

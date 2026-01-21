@@ -1,0 +1,91 @@
+frontend/
+│
+├─ index.html
+├─ package.json
+├─ vite.config.js
+│
+└─ src/
+   │
+   ├─ main.jsx              
+   ├─ App.jsx               
+   ├─ index.css
+   │
+   ├─ api/
+   │   └─ axios.js           
+   |   |__ auth.api.js      
+   |   |__ topic.api.js
+   │
+   ├─ auth/
+   │   ├─ AuthContext.jsx    
+   │   └─ ProtectedRoute.jsx
+   |   └─ Login.jsx
+   |
+   |─ components/            
+   │   ├─ Navbar.jsx
+   │   ├─ Card.jsx
+   │   └─ Sidebar.jsx
+   │
+   ├─ pages/
+   │   │
+   │   ├─ auth/
+   │   │   ├─ Login.jsx
+   │   │   └─ Register.jsx
+   │   │
+   │   ├─ user/
+   │   │   ├─ TopicList.jsx
+   │   │   ├─ TopicDetail.jsx
+   │   │   ├─ QuizPlay.jsx
+   │   │   └─ Result.jsx
+   │   │
+   │   └─ admin/
+   │       ├─ admin.css
+   │       └─ AdminImport.jsx
+   |       └─ AdminTopics.jsx
+   |       └─ AdminDashboard.jsx
+   │
+   ├─ routes/
+   │    └─ ProtectedRoute.jsx
+   ├─ layouts/
+   │    └─ AdminLayout.jsx
+   |    └─ UserLayout.jsx
+   |    └─ AuthLayout.jsx
+
+ 
+backend/
+│├─ app/
+│   ├─ api/
+│   │   └─ v1/
+│   │       └─ auth.py
+│   │       └─ topics.py
+│   │       └─ questions.py
+|   |       └─ quizzes.py
+|   |       └─ routes.py
+|   |       └─ __init__.py
+|   |    └─ deps.py
+│   ├─ core/
+│   │   └─ security.py
+│   |   └─ config.py
+│   |   └─ database.py
+|   |   └─ jwt.py
+|   ├─ models/
+|   │   └─ user.py
+|   │   └─ topic.py
+|   │   └─ question.py
+|   |   └─ answer.py
+|   |   └─ base.py
+|   |   └─ __init__.py
+|   |   └─ quiz_attempt.py
+|   |   └─ quiz_answer.py
+│   ├─ schemas/
+│   │   └─ user.py
+│   │   └─ topic.py
+│   │   └─ question.py
+│   │   └─ answer.py
+│   │   └─ quiz.py
+│   │   └─ auth.py
+│   │   └─ __init__.py
+│   ├─ services/
+│   │   └─ __init__.py
+│   │   └─ quiz_scoring.py
+│   ├─ main.py
+|-create_db.py
