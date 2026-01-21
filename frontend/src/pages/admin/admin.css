@@ -18,9 +18,16 @@ body {
 
 /* ===== SIDEBAR ===== */
 .admin-sidebar {
-  width: 260px;
-  background: #0f172a;
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 240px;
+  height: 100vh;
+
+  background: #1f2937; /* dark */
   color: #fff;
+
   display: flex;
   flex-direction: column;
 }
@@ -67,6 +74,8 @@ body {
 .admin-logout {
   padding: 16px;
   border-top: 1px solid #1e293b;
+  margin-top: auto;
+  margin-bottom: 16px;
 }
 
 .admin-logout button {
@@ -77,6 +86,7 @@ body {
   color: white;
   border-radius: 6px;
   cursor: pointer;
+  border-bottom: 10px;
 }
 
 .admin-logout button:hover {
@@ -85,8 +95,13 @@ body {
 
 /* ===== MAIN ===== */
 .admin-main {
-  flex: 1;
-  padding: 32px;
+  margin-left: 240px; /* BẰNG width sidebar */
+  width: calc(100% - 240px);
+
+  min-height: 100vh;
+  padding: 24px;
+
+  overflow-y: auto;
 }
 
 /* ===== DASHBOARD ===== */

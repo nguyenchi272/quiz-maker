@@ -96,15 +96,7 @@ def import_questions_excel(
     except Exception:
         raise HTTPException(status_code=400, detail="Invalid Excel file")
 
-    required_cols = {
-        "question",
-        "type",
-        "answer_a",
-        "answer_b",
-        "answer_c",
-        "answer_d",
-        "correct"
-    }
+    required_cols = {"question", "type", "correct"}
 
     if not required_cols.issubset(df.columns):
         raise HTTPException(
@@ -129,18 +121,26 @@ def import_questions_excel(
         db.add(question)
         db.flush()  # get question.id
 
-        answers_map = {
-            "A": row["answer_a"],
-            "B": row["answer_b"],
-            "C": row["answer_c"],
-            "D": row["answer_d"],
-        }
+        # Collect answers dynamically (A → E)
+        answers_map = {}
+
+        for idx, label in enumerate(["A", "B", "C", "D", "E"]):
+            col = f"answer_{label.lower()}"
+            if col in df.columns:
+                val = row[col]
+                if pd.notna(val) and str(val).strip() != "":
+                    answers_map[label] = str(val).strip()
+
+        # Must have at least 2 answers
+        if len(answers_map) < 2:
+            db.rollback()
+            continue
 
         correct_raw = str(row["correct"]).strip().upper()
         correct_list = [c.strip() for c in correct_raw.split(",")]
 
         # Validate correct labels
-        if not all(c in answers_map for c in correct_list):
+        if any(c not in answers_map for c in correct_list):
             db.rollback()
             continue
 
@@ -149,7 +149,7 @@ def import_questions_excel(
             answer = Answer(
                 question_id=question.id,
                 label=label,
-                content=str(content).strip(),
+                content=content,
                 is_correct=False,
                 rank_order=None
             )
