@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Boolean, Column, Integer, String, DateTime
 from sqlalchemy.sql import func
 
 from app.core.database import Base
@@ -10,5 +10,6 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     role = Column(String, default="user")  # user | admin
+    is_verified = Column(Boolean, default=False)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())

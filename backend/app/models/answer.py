@@ -6,9 +6,9 @@ class Answer(Base):
     __tablename__ = "answers"
 
     id = Column(Integer, primary_key=True)
-    question_id = Column(Integer, ForeignKey("questions.id"), nullable=False)
+    question_id = Column(Integer, ForeignKey("questions.id", ondelete="CASCADE"), nullable=False)
 
-    label = Column(String, nullable=False)  # A, B, C...
+    label = Column(String, nullable=False)
     content = Column(String, nullable=False)
 
     is_correct = Column(Boolean, default=False)

@@ -13,6 +13,7 @@ import AdminTopics from "./pages/admin/AdminTopics";
 import AdminImport from "./pages/admin/AdminImport";
 import AdminLayout from "./layouts/AdminLayout";
 import AdminQuestions from "./pages/admin/AdminQuestions";
+import VerifyEmail from "./pages/auth/VerifyEmail";
 import UserLayout from "./layouts/UserLayout";
 
 import ProtectedRoute from "./routes/ProtectedRoute";
@@ -24,6 +25,7 @@ export default function App() {
       {/* ---------- PUBLIC ---------- */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/verify-email" element={<VerifyEmail />} />
 
       {/* ---------- USER ---------- */}
       <Route

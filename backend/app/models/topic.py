@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean
 from app.core.database import Base
+from sqlalchemy.orm import relationship
 
 class Topic(Base):
     __tablename__ = "topics"
@@ -9,3 +10,9 @@ class Topic(Base):
     description = Column(String)
     difficulty = Column(String)
     is_published = Column(Boolean, default=True)
+
+    questions = relationship(
+        "Question",
+        back_populates="topic",
+        cascade="all, delete-orphan" 
+    )
