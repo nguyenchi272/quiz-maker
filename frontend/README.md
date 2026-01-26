@@ -1,16 +1,205 @@
-# React + Vite
+pages/auth/Register.jsx
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import AuthLayout from "../../layouts/AuthLayout";
+import axios from "axios";
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+export default function Register() {
+  const navigate = useNavigate();
 
-Currently, two official plugins are available:
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
-## React Compiler
+    try {
+      await axios.post("http://127.0.0.1:8000/api/auth/register", {
+        email,
+        password
+      });
+      navigate("/login");
+    } catch (err) {
+      setError("Email already exists");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+  return (
+    <AuthLayout>
+      <h2 style={title}>Create account</h2>
+      <p style={subtitle}>Start your quiz journey</p>
 
-## Expanding the ESLint configuration
+      {error && <div style={errorStyle}>{error}</div>}
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+      <form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          required
+          style={input}
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          required
+          style={input}
+        />
+
+        <button disabled={loading} style={button}>
+          {loading ? "Creating..." : "Register"}
+        </button>
+      </form>
+
+      <p style={footer}>
+        Already have an account? <Link to="/login">Login</Link>
+      </p>
+    </AuthLayout>
+  );
+}
+
+/* reuse same styles as Login */
+const title = { marginBottom: 8 };
+const subtitle = { color: "#6b7280", marginBottom: 24 };
+const input = {
+  width: "100%",
+  padding: 12,
+  marginBottom: 16,
+  borderRadius: 8,
+  border: "1px solid #d1d5db"
+};
+const button = {
+  width: "100%",
+  padding: 12,
+  background: "#16a34a",
+  color: "#fff",
+  border: "none",
+  borderRadius: 8,
+  cursor: "pointer"
+};
+const errorStyle = {
+  background: "#fee2e2",
+  color: "#991b1b",
+  padding: 10,
+  borderRadius: 6,
+  marginBottom: 16
+};
+const footer = {
+  marginTop: 20,
+  textAlign: "center"
+};
+
+pages/auth/Login.jsx
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import AuthLayout from "../../layouts/AuthLayout";
+import { useAuth } from "../../auth/AuthContext";
+
+export default function Login() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const user = await login(email, password);
+
+      if (user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/topics");
+      }
+    } catch (err) {
+      setError("Invalid email or password");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <AuthLayout>
+      <h2 style={title}>Welcome back</h2>
+      <p style={subtitle}>Sign in to continue</p>
+
+      {error && <div style={errorStyle}>{error}</div>}
+
+      <form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          required
+          style={input}
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          required
+          style={input}
+        />
+
+        <button disabled={loading} style={button}>
+          {loading ? "Signing in..." : "Login"}
+        </button>
+      </form>
+
+      <p style={footer}>
+        No account? <Link to="/register">Register</Link>
+      </p>
+    </AuthLayout>
+  );
+}
+
+/* styles */
+const title = { marginBottom: 8 };
+const subtitle = { color: "#6b7280", marginBottom: 24 };
+const input = {
+  width: "100%",
+  padding: 12,
+  marginBottom: 16,
+  borderRadius: 8,
+  border: "1px solid #d1d5db"
+};
+const button = {
+  width: "100%",
+  padding: 12,
+  background: "#4f46e5",
+  color: "#fff",
+  border: "none",
+  borderRadius: 8,
+  cursor: "pointer"
+};
+const errorStyle = {
+  background: "#fee2e2",
+  color: "#991b1b",
+  padding: 10,
+  borderRadius: 6,
+  marginBottom: 16
+};
+const footer = {
+  marginTop: 20,
+  textAlign: "center"
+};
+

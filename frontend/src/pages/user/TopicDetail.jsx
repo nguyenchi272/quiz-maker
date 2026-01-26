@@ -63,6 +63,13 @@ export default function TopicDetail() {
         >
           ▶ Start Quiz
         </button>
+
+        <button
+          className="review-btn"
+          onClick={() => navigate(`/quiz/${topic.id}?mode=review`)}
+        >
+          📘 Review
+        </button>
       </div>
     </div>
   );

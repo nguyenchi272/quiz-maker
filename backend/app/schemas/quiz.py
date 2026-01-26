@@ -4,6 +4,7 @@ from typing import List, Dict
 class QuizAnswerOut(BaseModel):
     label: str
     content: str
+    is_correct: bool | None = None
 
 class QuizQuestionOut(BaseModel):
     id: int

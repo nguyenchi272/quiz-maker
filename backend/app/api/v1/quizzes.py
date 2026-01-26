@@ -37,7 +37,7 @@ def get_db():
 # POST /api/quizzes/start
 # -------------------------------
 @router.post("/start", response_model=QuizStartResponse)
-def start_quiz(topic_id: int, db: Session = Depends(get_db)):
+def start_quiz(topic_id: int, mode: str = "exam", db: Session = Depends(get_db)):
     questions = (
         db.query(Question)
         .filter(Question.topic_id == topic_id)
@@ -51,7 +51,7 @@ def start_quiz(topic_id: int, db: Session = Depends(get_db)):
 
     for q in questions:
         answers = [
-            QuizAnswerOut(label=a.label, content=a.content)
+            QuizAnswerOut(label=a.label, content=a.content, is_correct=a.is_correct if mode == "review" else None)
             for a in q.answers
         ]
 

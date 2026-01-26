@@ -204,6 +204,22 @@
   background: #4338ca;
 }
 
+.review-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  background: #10b981;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 12px;
+}
+
+.review-btn:hover {
+  background: #059669;
+}
+
 .quiz-card {
   background: #fff;
   padding: 32px;
@@ -295,6 +311,16 @@
   list-style: none;
   padding-left: 0;
   margin-left: 0;
+}
+
+.answer-option.correct {
+  background: #dcfce7;
+  border: 1px solid #16a34a;
+}
+
+.answer-option.wrong {
+  background: #fee2e2;
+  border: 1px solid #dc2626;
 }
 
 
