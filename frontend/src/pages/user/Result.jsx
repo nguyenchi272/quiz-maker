@@ -1,49 +1,19 @@
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./user.css";
 
 export default function Result() {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { topicId } = useParams();
 
   if (!state) return <p>Không có dữ liệu</p>;
 
-  const { questions, answers } = state;
+  const { questions, answers, result } = state;
+  const { total_score, max_score, details } = result;
 
-  let totalScore = 0;
-  let maxScore = questions.length;
-
-  const isCorrect = (q, selected) => {
-    if (!selected || selected.length === 0) return false;
-
-    // ---------- MULTIPLE / CHECKBOX ----------
-    if (q.type === "multiple" || q.type === "checkbox") {
-      const correctLabels = q.answers
-        .filter(a => a.is_correct)
-        .map(a => a.label);
-
-      if (selected.length !== correctLabels.length) return false;
-      return correctLabels.every(label => selected.includes(label));
-    }
-
-    // ---------- RANKING ----------
-    if (q.type === "ranking") {
-      const correctOrder = q.answers
-        .slice()
-        .sort((a, b) => a.rank_order - b.rank_order)
-        .map(a => a.id);
-
-      if (selected.length !== correctOrder.length) return false;
-
-      return selected.every((id, idx) => id === correctOrder[idx]);
-    }
-
-    return false;
-  };
-
-
-  questions.forEach((q) => {
-    if (isCorrect(q, answers[q.id])) totalScore++;
+  // map question_id -> result
+  const resultMap = {};
+  details.forEach(r => {
+    resultMap[r.question_id] = r;
   });
 
   return (
@@ -51,11 +21,11 @@ export default function Result() {
       <h2>Kết quả</h2>
 
       <div className="result-score">
-        {totalScore} / {maxScore}
+        {total_score} / {max_score}
       </div>
 
       <p>
-        {totalScore === maxScore
+        {total_score === max_score
           ? "🎉 Hoàn hảo!"
           : "💪 Cố gắng hơn nhé!"}
       </p>
@@ -70,7 +40,8 @@ export default function Result() {
       <hr style={{ margin: "24px 0" }} />
 
       {questions.map((q, idx) => {
-        const correct = isCorrect(q, answers[q.id]);
+        const r = resultMap[q.id];
+        const userAns = answers[q.id] || [];
 
         return (
           <div key={q.id} style={{ marginBottom: 20 }}>
@@ -79,31 +50,33 @@ export default function Result() {
             </strong>
 
             <ul style={{ fontSize: 14, marginTop: 8 }}>
-              {q.answers.map((a, i) => {
-                const chosen =
-                  (answers[q.id] || []).includes(i);
+              {q.answers.map((a) => {
+                const chosen = userAns.includes(a.label);
+                const isCorrectAnswer =
+                  r?.correct_answers?.includes(a.label) ?? false;
+
+                let color = "#374151";
+                if (isCorrectAnswer) color = "#16a34a";
+                else if (chosen) color = "#dc2626";
 
                 return (
                   <li
-                    key={i}
+                    key={a.label}
                     style={{
-                      color: a.is_correct
-                        ? "#16a34a"          // xanh
-                        : chosen
-                        ? "#dc2626"          // đỏ
-                        : "#374151",
-                      fontWeight: a.is_correct || chosen ? 600 : 400,
+                      color,
+                      fontWeight:
+                        isCorrectAnswer || chosen ? 600 : 400,
                     }}
                   >
-                    {a.content}
+                    <strong>{a.label}.</strong> {a.content}
                   </li>
-
                 );
               })}
             </ul>
 
             <div style={{ fontWeight: 600 }}>
-              {correct ? "✅ Đúng" : "❌ Sai"}
+              {r?.correct ? "✅ Đúng" : "❌ Sai"} —{" "}
+              {r?.score} / {r?.max_score}
             </div>
           </div>
         );

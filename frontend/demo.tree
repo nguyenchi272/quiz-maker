@@ -14,6 +14,8 @@ frontend/
    │   └─ axios.js           
    |   |__ auth.api.js      
    |   |__ topic.api.js
+   |   |__ question.api.js
+   |   |__ quizzes.api.js
    │
    ├─ auth/
    │   ├─ AuthContext.jsx    
@@ -30,25 +32,34 @@ frontend/
    │   ├─ auth/
    │   │   ├─ Login.jsx
    │   │   └─ Register.jsx
+   |   |   └─ VerifyEmail.jsx
+   |   |   └─ auth.css
    │   │
    │   ├─ user/
    │   │   ├─ TopicList.jsx
    │   │   ├─ TopicDetail.jsx
    │   │   ├─ QuizPlay.jsx
    │   │   └─ Result.jsx
+   |   |   └─ user.css
    │   │
    │   └─ admin/
    │       ├─ admin.css
    │       └─ AdminImport.jsx
    |       └─ AdminTopics.jsx
    |       └─ AdminDashboard.jsx
+   |       └─ AdminQuestions.jsx
+   |       └─ AdminTopicQuestions.jsx
+   |       └─ QuestionForm.jsx
    │
    ├─ routes/
    │    └─ ProtectedRoute.jsx
+   │    └─ AdminRoute.jsx
    ├─ layouts/
    │    └─ AdminLayout.jsx
    |    └─ UserLayout.jsx
    |    └─ AuthLayout.jsx
+   └─ context/
+        └─ AuthContext.jsx
 
  
 backend/
@@ -67,6 +78,7 @@ backend/
 │   |   └─ config.py
 │   |   └─ database.py
 |   |   └─ jwt.py
+|   |   └─ email.py
 |   ├─ models/
 |   │   └─ user.py
 |   │   └─ topic.py
@@ -87,5 +99,6 @@ backend/
 │   ├─ services/
 │   │   └─ __init__.py
 │   │   └─ quiz_scoring.py
+|   |   └─ email.py
 │   ├─ main.py
 |-create_db.py

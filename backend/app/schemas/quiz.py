@@ -25,6 +25,7 @@ class QuestionResult(BaseModel):
     score: float
     max_score: float
     correct: bool
+    correct_answers: List[str]
 
 class QuizSubmitResponse(BaseModel):
     total_score: float

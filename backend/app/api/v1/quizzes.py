@@ -109,12 +109,15 @@ def submit_quiz(data: QuizSubmitRequest, db: Session = Depends(get_db), user: Us
         score, q_max = score_question(question, user_answers)
         total_score += score
 
+        correct_labels = [a.label for a in question.answers if a.is_correct]
+
         details.append(
             QuestionResult(
                 question_id=qid,
                 score=score,
                 max_score=q_max,
-                correct=score == q_max
+                correct=score == q_max,
+                correct_answers=correct_labels
             )
         )
 
