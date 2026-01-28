@@ -10,6 +10,7 @@ class QuizQuestionOut(BaseModel):
     id: int
     content: str
     type: str
+    explanation: str | None = None
     answers: List[QuizAnswerOut]
 
 class QuizStartResponse(BaseModel):

@@ -149,6 +149,14 @@ export default function QuizPlay() {
 
         {/* ===== ANSWERS ===== */}
         <div className="quiz-answers">
+          {/* ===== EXPLANATION (REVIEW ONLY) ===== */}
+          {isReview && checked && q.explanation && (
+            <div className="quiz-explanation">
+              <strong>📘 Giải thích:</strong>
+              <p>{q.explanation}</p>
+            </div>
+          )}
+
           {/* MULTIPLE / CHECKBOX */}
           {q.type !== "ranking" &&
             q.answers.map((a) => {

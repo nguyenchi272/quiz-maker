@@ -63,6 +63,7 @@ def start_quiz(topic_id: int, mode: str = "exam", db: Session = Depends(get_db))
                 id=q.id,
                 content=q.content,
                 type=q.type,
+                explanation=q.explanation if mode == "review" else None,
                 answers=answers
             )
         )
